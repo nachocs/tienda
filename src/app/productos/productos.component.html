@@ -1,3 +1,15 @@
-<p>
-  {{producto.subject}}
-</p>
+<div *ngIf="!loading">
+  <img *ngIf="producto.IMAGEN" [src]="root_url + producto.IMAGEN" title="{{producto.subject}}" alt="{{producto.subject}}" [align]="producto.IMAGEN_ancho > 400 ? 'center' : 'left'"
+    border=0 [width]="producto.IMAGEN_ancho?producto.IMAGEN_ancho:''" [height]="producto.IMAGEN_alto ? producto.IMAGEN_alto:''"
+    [class]="producto.IMAGEN_ancho>400?'imageCenter':'imageLeft'">
+  <div>
+    <b itemprop="name">{{producto.subject}}</b>
+  </div>
+  <span style="font-size:9px; color:grey;">ref
+    <span>{{producto.ID}}</span>
+  </span>
+  <div align="right" style="font-size:9px; color:'#AAA'">{{producto.date}}</div>
+
+
+  <i class=" fas fa-shopping-cart "></i>
+</div>
