@@ -2,14 +2,107 @@
   <img *ngIf="producto.IMAGEN" [src]="root_url + producto.IMAGEN" title="{{producto.subject}}" alt="{{producto.subject}}" [align]="producto.IMAGEN_ancho > 400 ? 'center' : 'left'"
     border=0 [width]="producto.IMAGEN_ancho?producto.IMAGEN_ancho:''" [height]="producto.IMAGEN_alto ? producto.IMAGEN_alto:''"
     [class]="producto.IMAGEN_ancho>400?'imageCenter':'imageLeft'">
-  <div>
-    <b itemprop="name">{{producto.subject}}</b>
+  <div class="entrada">
+    <div>
+      <b itemprop="name">{{producto.subject}}</b>
+    </div>
+    <span style="font-size:9px; color:grey;">ref
+      <span>{{producto.ID}}</span>
+    </span>
+    <div align="right" style="font-size:9px; color:'#AAA'">{{producto.date}}</div>
+    <div *ngIf="producto.OFERTA && isNumber(producto.OFERTA)">
+      <i class="fas fa-bullseye" title="&iexcl;oferta!"></i>
+
+      <b>&iexcl;&iexcl;{{producto.OFERTA}}% de descuento!!</b>
+    </div>
+    <div *ngIf="producto.OFERTA && producto.OFERTA === 'GEG'">
+      <b>GASTOS DE ENVIO GRATIS
+        <font size=-2>(**)</font>
+      </b>
+    </div>
+    <div *ngIf="producto.OFERTA && producto.OFERTA === '2GEG'">
+      <b>GASTOS DE ENVIO a la mitad
+        <font size=-2>(**)</font>
+      </b>
+    </div>
+    <span itemprop="description">
+      <div *ngIf="producto.formato">
+        <span>{{valor(producto.formato, 'formatos')}}</span>
+        <span *ngIf="producto.an && producto.al">{{producto.an}}x{{producto.al}}</span>
+        <span *ngIf="producto.enc">{{valor(producto.enc, 'enc')}}</span>
+        <span *ngIf="producto.solapa"> con solapa</span>
+        <span *ngIf="producto.sobrec"> con sobrecubiertas</span>
+        <span *ngIf="producto.NP"> {{producto.NP}} p&aacute;ginas</span>
+        <span *ngIf="producto.bw"> {{producto.bw}}</span>
+        <span *ngIf="producto.sent"> - sentido de lectura {{producto.sent}}</span>
+        <br>
+      </div>
+      <div *ngIf="producto.Description" innerHTML="{{producto.Description}}"></div>
+    </span>
+    <div *ngIf="producto.preventa && producto.disponibilidad && producto.Stock<=0" title="se lo enviaremos en cuanto salga a la venta">Preventa. Haga su reserva.</div>
+    <div *ngIf="producto.FP" title="fecha de salida prevista">Fecha de salida: {{producto.FP}}</div>
+    <div *ngIf="!producto.Stock && producto.disponibilidad && producto.dist==='PREVIEWS'">Disponible sólo hasta el dia 20 del mes.</div>
+    <div *ngIf="!producto.Stock && producto.disponibilidad && producto.dist==='PREVIEWS'">
+      <b>AVISO</b>: llegada de 1 a 2 meses.
+    </div>
+    <div *ngIf="!producto.Stock && !producto.preventa && producto.disponibilidad && producto.dist==='HEO'">
+      <b>AVISO</b>: producto de importación, llegada a partir de 2-3 semanas.
+    </div>
+    <div style="font-size:8px; color: #777777; " itemscope itemtype="http://schema.org/Book">
+      <div *ngIf="producto.isbn">
+        <b>ISBN:</b>
+        <span itemprop="isbn">{{producto.ISBN}}</span>
+      </div>
+      <div *ngIf="producto.codigo">
+        <b>EAN:</b>
+        <span itemprop="isbn">{{producto.codigo}}</span>
+      </div>
+    </div>
+    <div *ngIf="producto.tema">
+      <b>Tem&aacute;tica:</b>
+      <span>{{valor(producto.tema, 'temas')}}</span>
+    </div>
+    <div *ngIf="producto.ln">
+      <b>Idioma:</b>
+      <span>{{valor(producto.ln, 'idiomas')}}</span>
+    </div>
+    <div *ngIf="estados[producto.estado]">
+      Estado de conservación: {{estados[producto.estado]}}
+    </div>
+    <div>
+      <b *ngIf="producto.DIBUJO==producto.GUION">Gui&oacute;n y dibujo:</b>
+      <b *ngIf="producto.DIBUJO && producto.GUION && producto.DIBUJO!=producto.GUION">Gui&oacute;n:</b>
+      <b *ngIf="!producto.DIBUJO && producto.GUION">Autor:</b>
+      <span itemprop="creator" *ngIf="producto.GUION"> {{producto.GUION}}</span>
+    </div>
+    <div *ngIf="producto.DIBUJO && producto.DIBUJO != producto.GUION">
+      <b>Dibujo:</b>
+      <span itemprop="illustrator"> {{producto.DIBUJO}}</span>
+    </div>
+    <div *ngIf="producto.TINTA && producto.TINTA != producto.DIBUJO">
+      <b>Entintado:</b>
+      <span> {{producto.TINTA}}</span>
+    </div>
+    <div *ngIf="producto.COLOR">
+      <b>Color:</b>
+      <span> {{producto.COLOR}}</span>
+    </div>
+    <div *ngIf="producto.CORRESPONDENCIA">
+      <b>Correspondencia Original:</b>
+      <div>
+        {{producto.CORRESPONDENCIA}}
+      </div>
+    </div>
+    <blockquote>{{producto.COMENTARIO}}</blockquote>
+
+    <div *ngIf="isNumber(producto.OFERTA) && (producto.Stock > 0 || producto.disponibilidad)">
+      <span class="pvp">PVP: {{producto.euros}} &euro;</span>
+      <span class="precio">
+        <span itemprop="price"> {{aplicaDescuento(producto.euros, producto.OFERTA)}}</span> &euro;</span>
+    </div>
+
+    <!-- <<condicion:(parsear:tienda1/descuentoOFERTA.html),|Stock+=1||disponibilidad|OFERTA=numero,(condicion:(parsear:tienda1/descuento5.html),|Stock+=1|!iva,(condicion:(parsear:tienda1/descuento5.html),Stock+=1|iva=21,(condicion:(parsear:tienda1/descuento5.html),|Stock+=1|iva=4,(condicion:(parsear:tienda1/descuento5.html),|!Category=^cine|!Category=\Consolas|!subject=\Consola|!OFERTA||Stock+=1||disponibilidad,(parsear:tienda1/euros.html)))));>> -->
+
+    <i class=" fas fa-shopping-cart "></i>
   </div>
-  <span style="font-size:9px; color:grey;">ref
-    <span>{{producto.ID}}</span>
-  </span>
-  <div align="right" style="font-size:9px; color:'#AAA'">{{producto.date}}</div>
-
-
-  <i class=" fas fa-shopping-cart "></i>
 </div>

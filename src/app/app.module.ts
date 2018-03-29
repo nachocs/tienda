@@ -46,6 +46,7 @@ import { CategoriasComponent } from './categorias/categorias.component';
 import { ProductosComponent } from './productos/productos.component';
 import { HomeComponent } from './home/home.component';
 import { Service } from './service/service';
+import { GlobalService } from './service/globalservice';
 @NgModule({
   declarations: [
     AppComponent,
@@ -91,7 +92,7 @@ import { Service } from './service/service';
     MatTooltipModule,
     HttpClientModule
   ],
-  providers: [Service],
+  providers: [Service, GlobalService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
