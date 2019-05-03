@@ -41,7 +41,8 @@ export class ProductosComponent implements OnInit {
   ngOnInit() {
     this.loading = true;
     this.route.paramMap.subscribe((params: ParamMap) => {
-      this.service.getProduct(params.get('id')).subscribe((res) => {
+      const id = params.get('id').replace(/_.*$/, '');
+      this.service.getProduct(id).subscribe((res) => {
         this.loading = false;
         this.producto = this.serializer(res);
       });
