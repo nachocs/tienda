@@ -14,9 +14,8 @@
       <h2 itemprop="name">{{ producto.subject }}</h2>
     </div>
     <div class="small-grey">
-      <span class="small-grey"
-        >ref
-        <span>{{ producto.ID }}</span>
+      <span class="small-grey">
+        <span>ref {{ producto.ID }}</span>
       </span>
       <span> {{ producto.date }}</span>
     </div>
@@ -108,18 +107,91 @@
     <div *ngIf="isNumber(producto.OFERTA) && (producto.Stock > 0 || producto.disponibilidad)">
       <span class="pvp">PVP: {{ producto.euros }} &euro;</span>
       <span class="precio">
-        <span itemprop="price"> {{ aplicaDescuento(producto.euros, producto.OFERTA) }}</span> &euro;</span
-      >
+        <span itemprop="price"> {{ aplicaDescuento(producto.euros, producto.OFERTA) }}</span> &euro;
+      </span>
     </div>
     <div *ngIf="!producto.OFERTA && (producto.Stock > 0 || producto.disponibilidad)">
       <span class="pvp">PVP: {{ producto.euros }} &euro;</span>
       <span class="precio">
-        <span itemprop="price"> {{ aplicaDescuento(producto.euros, 5) }}</span> &euro;</span
-      >
+        <span itemprop="price"> {{ aplicaDescuento(producto.euros, 5) }}</span> &euro;
+      </span>
     </div>
 
-    <!-- <<condicion:(parsear:tienda1/descuentoOFERTA.html),|Stock+=1||disponibilidad|OFERTA=numero,(condicion:(parsear:tienda1/descuento5.html),|Stock+=1|!iva,(condicion:(parsear:tienda1/descuento5.html),Stock+=1|iva=21,(condicion:(parsear:tienda1/descuento5.html),|Stock+=1|iva=4,(condicion:(parsear:tienda1/descuento5.html),|!Category=^cine|!Category=\Consolas|!subject=\Consola|!OFERTA||Stock+=1||disponibilidad,(parsear:tienda1/euros.html)))));>> -->
+    <div class="shopping-cart">
+      <span *ngIf="producto.Stock >= 1">
+        <a
+          href="#"
+          (click)="addToBasket(producto.ID)"
+          rel="nofollow"
+          class="cesta"
+          title="A&ntilde;adir a la cesta"
+          matTooltip="A&ntilde;adir a la cesta"
+          aria-label="A&ntilde;adir a la cesta"
+        >
+          <i class="fas fa-shopping-cart"></i>
+        </a>
+        <span
+          matTooltip="Este producto lo tenemos en stock en almacen, se lo enviaremos inmediatamente"
+          itemprop="availability"
+          href="http://schema.org/InStock"
+          >En stock. Envio inmediato</span
+        >
+      </span>
 
-    <i class=" fas fa-shopping-cart "></i>
+      <span *ngIf="producto.disponibilidad && (!producto.Stock || producto.Stock <= 0) && !producto.preventa">
+        <a
+          href="#"
+          (click)="addToBasket(producto.ID)"
+          rel="nofollow"
+          class="cesta"
+          title="A&ntilde;adir a la cesta"
+          matTooltip="A&ntilde;adir a la cesta"
+          aria-label="A&ntilde;adir a la cesta"
+        >
+          <i class=" fas fa-shopping-cart "></i>
+        </a>
+        <span
+          itemprop="availability"
+          content="online_only"
+          matTooltip="Este producto no esta en stock, se lo enviaremos en cuanto nos llegue del distribuidor, que lo tiene disponible, solo tardará unos dias"
+          >En distribución. Envio aprox. de 1 a {{ producto.disponibilidad }} días laborables</span
+        >
+      </span>
+
+      <span *ngIf="producto.disponibilidad && producto.preventa && (!producto.Stock || producto.Stock <= 0)">
+        <a
+          href="#"
+          (click)="addToBasket(producto.ID)"
+          rel="nofollow"
+          class="cesta"
+          title="A&ntilde;adir a la cesta"
+          matTooltip="A&ntilde;adir a la cesta"
+          aria-label="A&ntilde;adir a la cesta"
+        >
+          <i class="fas fa-shopping-cart"></i>
+        </a>
+        <span matTooltip="este producto está en preventa, se lo enviaremos en cuanto salga a la venta">
+          Preventa. <span *ngIf="producto.FP">Lanzamiento aprox {{ producto.FP }}</span>
+        </span>
+      </span>
+
+      <span
+        *ngIf="!producto.disponibilidad && producto.Stock_minimo && (!producto.Stock || producto.Stock <= 0)"
+        title="no disponible temporalmente"
+        matTooltip="no disponible temporalmente"
+        >No Disponible</span
+      >
+
+      <span
+        *ngIf="(!producto.Stock || producto.Stock <= 0) && !producto.Stock_minimo && !producto.disponibilidad"
+        title="no podemos conseguirlo"
+        matTooltip="no podemos conseguirlo"
+        >Producto Agotado.</span
+      >
+
+      <span *ngIf="isNumber(producto.Stock) && !producto.disponibilidad && (!producto.Stock || producto.Stock <= 0)">
+        {{ producto.Stock }}</span
+      >
+    </div>
   </div>
 </div>
