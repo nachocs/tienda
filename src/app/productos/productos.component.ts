@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import 'rxjs/add/operator/switchMap';
+
 import { Service } from '../service/service';
 import { GlobalService } from '../service/globalservice';
 import * as moment from 'moment';
@@ -8,21 +8,21 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-productos',
   templateUrl: './productos.component.html',
-  styleUrls: ['./productos.component.scss']
+  styleUrls: ['./productos.component.scss'],
 })
 export class ProductosComponent implements OnInit {
   producto: any;
   loading: Boolean = false;
-  root_url: String = 'http://www1.dreamers.com';
+  root_url: String = 'https://tienda.dreamers.es';
   formatos: any;
   enc: any;
   temas: any;
   idiomas: any;
   estados: any = {
-    'MB': 'Muy bueno',
-    'B': 'Bueno',
-    'R': 'Regular',
-    'P': 'Pasable'
+    MB: 'Muy bueno',
+    B: 'Bueno',
+    R: 'Regular',
+    P: 'Pasable',
   };
   constructor(private route: ActivatedRoute, private router: Router, private service: Service, private globalService: GlobalService) {
     this.globalService.getConfig('formatos').subscribe((data) => {
@@ -40,23 +40,22 @@ export class ProductosComponent implements OnInit {
   }
   ngOnInit() {
     this.loading = true;
-    this.route.paramMap
-      .subscribe((params: ParamMap) => {
-        this.service.getProduct(params.get('id')).subscribe((res) => {
-          this.loading = false;
-          this.producto = this.serializer(res);
-        });
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      this.service.getProduct(params.get('id')).subscribe((res) => {
+        this.loading = false;
+        this.producto = this.serializer(res);
       });
+    });
   }
   isNumber(number) {
     return !isNaN(parseFloat(number)) && isFinite(number);
   }
   aplicaDescuento(euros, oferta) {
-    return (Number(euros) * (100 - Number(oferta)) / 100).toFixed(2);
+    return ((Number(euros) * (100 - Number(oferta))) / 100).toFixed(2);
   }
   valor(key, indice) {
     if (key) {
-      const val = this[indice].find(i => i.ID === key);
+      const val = this[indice].find((i) => i.ID === key);
       if (val) {
         key = val.Name;
       }

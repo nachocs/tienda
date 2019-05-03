@@ -10,3 +10,28 @@
 .entrada {
   padding-top: 20px;
 }
+
+.pvp {
+  text-decoration: line-through;
+  white-space: nowrap;
+  display: block;
+  position: relative;
+  margin-top: 4px;
+  margin-left: 5px;
+}
+
+.precio {
+  font-size: 1.5em;
+  bottom: 0px;
+  left: 10px;
+  color: #f70000;
+  font-weight: 700;
+  white-space: nowrap;
+  font-family: Dreamers, Verdana, Arial, Helvetica;
+  margin: 3px 0;
+}
+
+.small-grey {
+  font-size: 0.6rem;
+  color: grey;
+}

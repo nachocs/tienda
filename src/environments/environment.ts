@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  BASE_API_URL: 'http://dreamers.com/com/home2/cgi'
+  BASE_API_URL: 'https://dreamers.es/com/home2/cgi',
 };
