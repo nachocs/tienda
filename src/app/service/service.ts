@@ -26,4 +26,8 @@ export class Service {
     const url = this.BASE_API_URL + '/json.cgi?indice=tienda/productos&entrada=' + productId;
     return this.getHttp(url);
   }
+  getCategory(ruta: string) {
+    const url = this.BASE_API_URL + '/json.cgi?indice=tienda/categorias&max=100&encontrar=Name=' + ruta;
+    return this.getHttp(url);
+  }
 }
