@@ -27,6 +27,9 @@ export class CategoriasComponent implements OnInit {
       time.setTime(model.FECHA + '000');
       model.date = moment(time).format('l');
     }
+    if(model.nsprods){
+      model.nsprods = model.nsprods.split(',');
+    }
     return model;
   }
 

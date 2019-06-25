@@ -40,20 +40,17 @@ import {
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
-
 } from '@angular/material';
 import { CategoriasComponent } from './categorias/categorias.component';
 import { ProductosComponent } from './productos/productos.component';
+import { EntryComponent } from './entry/entry.component';
 import { HomeComponent } from './home/home.component';
 import { Service } from './service/service';
 import { GlobalService } from './service/globalservice';
+import { DbService } from './service/db.service';
+
 @NgModule({
-  declarations: [
-    AppComponent,
-    CategoriasComponent,
-    ProductosComponent,
-    HomeComponent
-  ],
+  declarations: [AppComponent, CategoriasComponent, ProductosComponent, HomeComponent, EntryComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -90,9 +87,9 @@ import { GlobalService } from './service/globalservice';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    HttpClientModule
+    HttpClientModule,
   ],
-  providers: [Service, GlobalService],
-  bootstrap: [AppComponent]
+  providers: [Service, GlobalService, DbService],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

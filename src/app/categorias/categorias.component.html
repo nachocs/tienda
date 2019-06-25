@@ -1,4 +1,6 @@
-<p>
-  categorias works!
-  {{ categoria.Name }}
-</p>
+<h2>{{ categoria.Name }}</h2>
+<div>
+  <div *ngFor="let product of categoria.nsprods">
+    <app-entry productId="{{ product }}"></app-entry>
+  </div>
+</div>
