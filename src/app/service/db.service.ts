@@ -1,24 +1,53 @@
 import { Injectable } from '@angular/core';
+
 import * as idb from 'idb';
+import { Service } from './service';
 
 @Injectable()
 export class DbService {
   productosDb: any;
   productosStore: any;
-  constructor() {
+  constructor(private service: Service) {
     this.productosDb = idb.openDB('Productos', 1, {
-      upgrade(db) {
-        if (!db.objectStoreNames.contains('productos')) {
-          this.productosStore = db.createObjectStore('productos', {
-            keyPath: 'ID',
-          });
-        }
+      upgrade(db: idb.IDBPDatabase<any>) {
+        db.createObjectStore('productos', {
+          keyPath: 'ID',
+        });
       },
     });
   }
 
-  addProducto(producto) {
-    const tx = this.productosStore.transaction('productos', 'readwrite');
-    tx.store.add(producto);
+  async addProducto(producto, id) {
+    const db = await idb.openDB('Productos', 1);
+    if (db) {
+      const tx = db.transaction('productos', 'readwrite');
+      const store = tx.objectStore('productos');
+
+      try {
+        await store.get(id);
+      } catch (error) {
+        await store.add(producto);
+      }
+      await store.put(producto);
+
+      return await tx.done;
+    }
+  }
+  async getProductFromDb(id) {
+    const db = await idb.openDB('Productos', 1);
+
+    const tx = db.transaction('productos', 'readwrite');
+    const store = tx.objectStore('productos');
+    const prod = await store.get(id);
+    return prod;
+  }
+
+  async getProduct(id) {
+    let producto = await this.getProductFromDb(id);
+    if (!producto) {
+      producto = await this.service.getProduct(id).toPromise();
+      await this.addProducto(producto, id);
+    }
+    return producto;
   }
 }
