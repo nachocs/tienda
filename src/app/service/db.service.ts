@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
+import * as moment from 'moment';
 
 import * as idb from 'idb';
 import { Service } from './service';
 
+const ROOT_IMAGEN_URL = 'https://tienda.dreamers.es';
 @Injectable()
 export class DbService {
   productosDb: any;
@@ -15,6 +17,11 @@ export class DbService {
         });
       },
     });
+    this.clearDb('productos');
+  }
+  async clearDb(dbname) {
+    const db = await idb.openDB('Productos', 1);
+    db.clear(dbname);
   }
 
   async addProducto(producto, id) {
@@ -48,6 +55,24 @@ export class DbService {
       producto = await this.service.getProduct(id).toPromise();
       await this.addProducto(producto, id);
     }
-    return producto;
+    return this.serializer(producto);
+  }
+
+  serializer(model) {
+    let time;
+
+    if (model.TIME_A) {
+      time = new Date();
+      time.setTime(model.TIME_A + '000');
+      model.date = moment(time).format('l');
+    } else if (model.FECHA) {
+      time = new Date();
+      time.setTime(model.FECHA + '000');
+      model.date = moment(time).format('l');
+    }
+    if (model.IMAGEN) {
+      model.imagen_url = ROOT_IMAGEN_URL + model.IMAGEN;
+    }
+    return model;
   }
 }

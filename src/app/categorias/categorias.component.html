@@ -1,6 +1,4 @@
 <h2>{{ categoria.Name }}</h2>
 <div>
-  <div *ngFor="let product of categoria.nsprods">
-    <app-entry productId="{{ product }}"></app-entry>
-  </div>
+  <app-entry *ngFor="let product of categoria.nsprods" productId="{{ product }}"></app-entry>
 </div>
